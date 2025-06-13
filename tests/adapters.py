@@ -9,6 +9,7 @@ from cs336_data.nsfw_toxic import find_nsfw, find_toxic
 from cs336_data.quality_filter import passes_quality_filters
 from cs336_data.dedup import exact_deduplication
 from cs336_data.minhashLSHdedup import run_minhash_deduplication as minhash_impl
+from cs336_data.qualityclassifier.classify_quality import classify_quality
 
 def run_extract_text_from_html_bytes(html_bytes: bytes) -> str | None:
     return extract_text(html_bytes)
@@ -39,7 +40,7 @@ def run_classify_toxic_speech(text: str) -> tuple[Any, float]:
 
 
 def run_classify_quality(text: str) -> tuple[Any, float]:
-    return NotImplementedError
+    return classify_quality(text)
 
 
 def run_gopher_quality_filter(text: str) -> bool:

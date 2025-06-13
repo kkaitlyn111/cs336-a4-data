@@ -1,0 +1,48 @@
+{
+  "os": "Linux-6.8.0-60-generic-x86_64-with-glibc2.39",
+  "python": "CPython 3.12.3",
+  "startedAt": "2025-06-13T15:06:07.735834Z",
+  "program": "/home/user/cs336-a4-data/cs336_data/qualityclassifier/train_classif.py",
+  "codePath": "cs336_data/qualityclassifier/train_classif.py",
+  "git": {
+    "remote": "git@github.com:kkaitlyn111/cs336-a4-data.git",
+    "commit": "5a743302c7491a1c20847548dd4df42ac5449a8e"
+  },
+  "email": "kaitwang@stanford.edu",
+  "root": "/home/user/cs336-a4-data/cs336_data/qualityclassifier",
+  "host": "5ee55ab2-c9bf-4775-9fd1-a2603e60c6d4",
+  "executable": "/home/user/cs336-a4-data/.venv/bin/python3",
+  "codePathLocal": "train_classif.py",
+  "cpu_count": 4,
+  "cpu_count_logical": 8,
+  "gpu": "NVIDIA H100 80GB HBM3",
+  "gpu_count": 2,
+  "disk": {
+    "/": {
+      "total": "206901264384",
+      "used": "78898200576"
+    }
+  },
+  "memory": {
+    "total": "42059358208"
+  },
+  "cpu": {
+    "count": 4,
+    "countLogical": 8
+  },
+  "gpu_nvidia": [
+    {
+      "name": "NVIDIA H100 80GB HBM3",
+      "memoryTotal": "85520809984",
+      "cudaCores": 16896,
+      "architecture": "Hopper"
+    },
+    {
+      "name": "NVIDIA H100 80GB HBM3",
+      "memoryTotal": "85520809984",
+      "cudaCores": 16896,
+      "architecture": "Hopper"
+    }
+  ],
+  "cudaVersion": "12.7"
+}

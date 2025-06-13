@@ -19,6 +19,7 @@ from tqdm import tqdm
 from cs336_data.filter_CC import process_single_wet_file, gather_all_stats
 
 # ---------------------------------------------------------------------------
+MAX_DOCS = 10000
 
 def count_documents_in_file(wet_path):
     count = 0
@@ -37,7 +38,7 @@ def main(argv: list[str] | None = None) -> None:
                    help="Number of worker processes (default = CPU cores)")
     p.add_argument("--start-doc", type=int, default=1,
                    help="Start document index (1-based, inclusive)")
-    p.add_argument("--end-doc", type=int, default=100,
+    p.add_argument("--end-doc", type=int, default=MAX_DOCS,
                    help="End document index (1-based, inclusive). If None, process to end.")
     args = p.parse_args(argv)
 

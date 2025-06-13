@@ -22,11 +22,12 @@ if str(SCRIPT_DIR) not in sys.path:
 # --- core primitives implemented by you ------------------------------------
 from text_extractor import extract_text            # byte‑>plain‑text
 from quality_filter import passes_quality_filters  # quick heuristics
-# from quality_classifier_better import classify_quality
+from cs336_data.qualityclassifier.classify_quality import classify_quality
 from language_identifier import find_language_scores
 from personal_mask import mask_emails, mask_phone_numbers, mask_ips
 from nsfw_toxic import find_nsfw, find_toxic
 from dedup import compute_hash                      # exact intra‑run dedup
+from extra_filters import filter_blacklist
 
 # ----------------------------------------------------------------------------
 FILTER_ORDER = [
@@ -35,6 +36,7 @@ FILTER_ORDER = [
     "toxic",
     "quality_basic",
     "quality_classifier",
+    "extra_filter",
 ]
 
 # Boolean helper – nicer than repeatedly writing [0] == 'label'
@@ -46,9 +48,11 @@ def _is(label_pred, target: str) -> bool:
 def mask_pii(text: str) -> str:
     """Return *lower‑cased* text with PII replaced by sentinel tokens."""
     text = text.lower()
-    text, _ = mask_emails(text)
-    text, _ = mask_phone_numbers(text)
-    text, _ = mask_ips(text)
+    text, n_email = mask_emails(text)
+    text, n_phone = mask_phone_numbers(text)
+    text, n_ip = mask_ips(text)
+    print(f"Masked {n_email} emails, {n_phone} phone numbers, {n_ip} IP addresses")
+    print(text)
     return text
 
 
@@ -69,36 +73,52 @@ def filter_document(text: str, counters: Counter, doc_idx: int = None, doc_hash:
         counters["language"] += 1
         print(f"[Doc {doc_idx}] Filtered: Not English (lang={lang})")
         return False
+    
+
+    if not filter_blacklist(text):
+        counters["extra_filter"] += 1
+        print(f"[Doc {doc_idx}] Filtered: Extra filter")
+        return False
+
 
     # --- 2. NSFW -----------------------------------------------------------
     if _is(find_nsfw(text), "nsfw"):
         counters["nsfw"] += 1
         print(f"[Doc {doc_idx}] Filtered: NSFW")
+        print(text)
         return False
 
     # --- 3. Hate / toxicity -----------------------------------------------
     if _is(find_toxic(text), "toxic"):
         counters["toxic"] += 1
         print(f"[Doc {doc_idx}] Filtered: Toxic")
+        print(text)
         return False
 
     # --- 4. Quick heuristics ----------------------------------------------
     if not passes_quality_filters(text):
         counters["quality_basic"] += 1
         print(f"[Doc {doc_idx}] Filtered: Failed quality heuristics")
+        print(text)
         return False
 
-    # # --- 5. fastText quality classifier -----------------------------------
-    # label, _prob = classify_quality(text)
-    # # The classifier converts __label__wiki → "wiki", __label__cc → "cc"
-    # if label != "wiki":
-    #     counters["quality_classifier"] += 1
-    #     print(f"[Doc {doc_idx}] Filtered: Quality classifier label={label}")
-    #     return False
+    # --- 5. quality classifier -----------------------------------
+    label, prob = classify_quality(text)
+    # The classifier converts __label__wiki → "wiki", __label__cc → "cc"
+    if label != "wiki":
+        if prob > 0.8:
+            counters["quality_classifier"] += 1
+            print(f"[Doc {doc_idx}] Filtered: Quality classifier label={label}")
+            print(text)
+            return False
+        else:
+            print(f"[Doc {doc_idx}] quality classifier kept, but flagged. prob: {prob}")
+            print(text)
 
     # ----------------------------------------------------------------------
     counters["kept"] += 1
     print(f"[Doc {doc_idx}] Kept.")
+    print(text)
     return True
 
 

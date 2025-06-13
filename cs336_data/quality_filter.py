@@ -39,6 +39,20 @@ def passes_quality_filters(text: str) -> bool:
     if num_words == 0 or (alpha_words / num_words) < 0.8:
         return False
 
+    # Symbol-to-word ratio for # and ...
+    hash_count = text.count('#')
+    ellipsis_count = text.count('...')
+    if num_words > 0:
+        if (hash_count / num_words) > 0.1 or (ellipsis_count / num_words) > 0.1:
+            return False
+
+    # Stop word filter: at least two of the following must be present
+    stop_words = {'the', 'be', 'to', 'of', 'and', 'that', 'have', 'with'}
+    words_lower = set(word.lower() for word in words)
+    stop_words_found = sum(1 for w in stop_words if w in words_lower)
+    if stop_words_found < 2:
+        return False
+
     return True
 
 def main():

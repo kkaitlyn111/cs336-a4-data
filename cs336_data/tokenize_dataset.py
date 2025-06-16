@@ -5,8 +5,9 @@ from transformers import AutoTokenizer
 import sys
 
 
-input_path = "/home/user/cs336-a4-data/filtered_outputs/filtered_example.txt"  
-output_path = "/home/user/cs336-a4-data/tokenized_outputs/tokenized_example.npy"  
+#input_path = "/home/user/cs336-a4-data/filtered_outputs/CC-MAIN-20250430220529-20250501010529-00892.warc.wet.txt"  
+input_path = "/home/user/cs336-a4-data/filtered_outputs/example.warc.wet.txt"
+output_path = "/home/user/cs336-a4-data/tokenized_outputs/example.npy"  
 
 tokenizer = AutoTokenizer.from_pretrained("gpt2")
 

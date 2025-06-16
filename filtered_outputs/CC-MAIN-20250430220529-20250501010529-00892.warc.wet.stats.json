@@ -1,7 +1,10 @@
 {
-  "total": 100,
-  "language": 78,
-  "kept": 26,
-  "quality_basic": 8,
-  "toxic": 1
+  "total": 9998,
+  "language": 5761,
+  "quality_classifier": 1518,
+  "kept": 390,
+  "extra_filter": 1670,
+  "quality_basic": 780,
+  "toxic": 29,
+  "nsfw": 41
 }

@@ -27,6 +27,7 @@ zip -r "$output_file" . \
     -x '.venv/*' \
     -x '*.bin' \
     -x '*.pt' \
-    -x '*.pth'
+    -x '*.pth' \
+    -x '*.warc.gz'
 
 echo "All files have been compressed into $output_file"
